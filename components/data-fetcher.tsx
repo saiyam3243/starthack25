@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Loader2, AlertTriangle } from "lucide-react"
 import {
-  fetchWeatherData,
+  fetchWeatherData1,
   fetchSoilData,
   fetchVegetationData,
   getRiskAssessment,
@@ -47,9 +47,10 @@ export default function DataFetcher({
       const endDateStr = endDate.toISOString().split("T")[0]
 
       // Fetch weather data
-      const weatherData = await fetchWeatherData(latitude, longitude, startDateStr, endDateStr)
+      const weatherData = await fetchWeatherData1(latitude, longitude, startDateStr, endDateStr)
 
       setProgress("Fetching soil data...")
+      console.log("dew", weatherData);
 
       // Fetch soil data
       const soilData = await fetchSoilData(latitude, longitude)

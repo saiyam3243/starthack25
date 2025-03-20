@@ -1,3 +1,4 @@
+'use client'
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -7,8 +8,48 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
+import { fetchForecastDaily, getCoordinates } from '@/lib/api-services'
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 export default function Home() {
+
+  const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
+  const [name, setName] = useState("");
+  const [state, setState] = useState("");
+  const [crop, setCrop] = useState("");
+  const [farmSize, setFarmSize] = useState("");
+
+  const router = useRouter();
+
+  const handleGetStarted = async () => {
+
+    setCoordinates(await getCoordinates(name, state));
+
+    // Redirect to dashboard with query parameters
+    router.push(
+      `/dashboard?lat=${encodeURIComponent(coordinates.lat)}&lon=${encodeURIComponent(coordinates.lon)}&farmSize=${encodeURIComponent(farmSize)}`
+    );
+
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    
+    console.log("state:", state);
+    console.log("city:", name);
+  
+    const coords = await getCoordinates(name, state);
+    // const forecast = await fetchForecastDaily(coords.lat, coords.lon, "TempAir_DailyMin (C)");
+    // console.log("forec:", forecast);
+
+    setCoordinates(coords);
+  
+    // router.push(
+    //   `/dashboard?lat=${encodeURIComponent(coords.lat)}&lon=${encodeURIComponent(coords.lon)}&farmSize=${encodeURIComponent(farmSize)}&crop=${encodeURIComponent(crop)}`
+    // );
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <header className="bg-green-800 text-white py-4">
@@ -49,18 +90,120 @@ export default function Home() {
         <section className="bg-gradient-to-r from-green-700 to-green-900 text-white py-20">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Smart Biological Solutions for Your Farm</h1>
-            <p className="text-xl mb-8 max-w-3xl mx-auto">
+            <div className="text-xl mb-8 max-w-3xl mx-auto">
               Get AI-powered recommendations for biological products based on your specific crop, soil, and climate
               conditions.
-            </p>
+            </div>
+
+            {/* <Card className="flex w-1/4 flex-col justify-center p-4 items-center">
+                <div className="space-y-2">
+                  <Label htmlFor="district">District</Label>
+                  <Input id="district" placeholder="Enter your district" />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="state">State</Label>
+                  <Select>
+                    <SelectTrigger id="state">
+                      <SelectValue placeholder="Select state" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="maharashtra">Maharashtra</SelectItem>
+                      <SelectItem value="gujarat">Gujarat</SelectItem>
+                      <SelectItem value="punjab">Punjab</SelectItem>
+                      <SelectItem value="haryana">Haryana</SelectItem>
+                      <SelectItem value="karnataka">Karnataka</SelectItem>
+                      <SelectItem value="telangana">Telangana</SelectItem>
+                      <SelectItem value="andhra_pradesh">Andhra Pradesh</SelectItem>
+                      <SelectItem value="tamil_nadu">Tamil Nadu</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="col-span-2 space-y-2">
+                  <Label htmlFor="farmSize">Farm Size</Label>
+                  <Input id="farmSize" placeholder="Enter size" />
+                </div>
+            </Card> */}
+
+            <Card className="border-2 border-green-100 shadow-lg w-1/2 mx-auto">
+              <CardHeader>
+                <CardTitle>Create Your Farm Profile</CardTitle>
+                <CardDescription>Fill in the details below to get started</CardDescription>
+              </CardHeader>
+
+              <CardContent>
+                <form className="space-y-6" onSubmit={handleSubmit}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="district">City/Village Name</Label>
+                      <Input
+                        id="district"
+                        placeholder="Enter your city/village name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="state">State</Label>
+                      <Select value={state} onValueChange={(value) => setState(value)}>
+                        <SelectTrigger id="state">
+                          <SelectValue placeholder="Select state" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="maharashtra">Maharashtra</SelectItem>
+                          <SelectItem value="gujarat">Gujarat</SelectItem>
+                          <SelectItem value="punjab">Punjab</SelectItem>
+                          <SelectItem value="haryana">Haryana</SelectItem>
+                          <SelectItem value="karnataka">Karnataka</SelectItem>
+                          <SelectItem value="telangana">Telangana</SelectItem>
+                          <SelectItem value="andhra_pradesh">Andhra Pradesh</SelectItem>
+                          <SelectItem value="tamil_nadu">Tamil Nadu</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="farmSize">Farm Size</Label>
+                      <Input
+                        id="farmSize"
+                        placeholder="Enter size"
+                        value={farmSize}
+                        onChange={(e) => setFarmSize(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Primary Crop</Label>
+                    <Select onValueChange={(value) => setCrop(value)}>
+                      <SelectTrigger id="crop">
+                        <SelectValue placeholder="Select crop" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="cotton">Cotton</SelectItem>
+                        <SelectItem value="chickpea">Chickpea</SelectItem>
+                        <SelectItem value="wheat">Wheat</SelectItem>
+                        <SelectItem value="rice">Rice</SelectItem>
+                        <SelectItem value="maize">Maize</SelectItem>
+                        <SelectItem value="vegetables">Vegetables</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
+                    Create Farm Profile
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" className="bg-white text-green-800 hover:bg-gray-100">
-                <Link href="/dashboard" className="flex items-center gap-2">
-                  Get Started <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-green-800">
-                <Link href="#learn-more">Learn More</Link>
+              <Button size="lg" className="bg-white text-green-800 hover:bg-gray-100" onClick={handleGetStarted}>
+                Get Started <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
           </div>
@@ -72,10 +215,10 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <h2 className="text-3xl font-bold mb-6">Create Your Farm Profile</h2>
-                <p className="text-lg mb-6">
+                <div className="text-lg mb-6">
                   Tell us about your farm to get personalized recommendations for biological products that will help you
                   improve crop health and yield while reducing chemical inputs.
-                </p>
+                </div>
                 <div className="space-y-6">
                   <div className="flex items-start gap-3">
                     <div className="bg-green-100 p-2 rounded-full text-green-600 mt-1">
@@ -94,10 +237,10 @@ export default function Home() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-lg">Personalized Recommendations</h3>
-                      <p>
+                      <div>
                         Get product recommendations tailored to your specific crops, soil type, and local climate
                         conditions.
-                      </p>
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -117,7 +260,7 @@ export default function Home() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-lg">Risk Assessment</h3>
-                      <p>Identify potential pest, disease, and climate risks before they affect your crops.</p>
+                      <div>Identify potential pest, disease, and climate risks before they affect your crops.</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -137,14 +280,14 @@ export default function Home() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-lg">Track Your Results</h3>
-                      <p>
+                      <div>
                         Monitor the effectiveness of biological products and improve your farming practices over time.
-                      </p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div>
+              {/* <div>
                 <Card className="border-2 border-green-100 shadow-lg">
                   <CardHeader>
                     <CardTitle>Create Your Farm Profile</CardTitle>
@@ -313,7 +456,7 @@ export default function Home() {
                     </form>
                   </CardContent>
                 </Card>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
@@ -332,10 +475,10 @@ export default function Home() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p>
+                  <div>
                     Our AI analyzes historical and forecast data to identify potential risks to your crops, helping you
                     prepare and mitigate issues before they arise.
-                  </p>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -348,10 +491,10 @@ export default function Home() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p>
+                  <div>
                     Based on your specific conditions, our system recommends the most effective biological products to
                     protect your crops and improve soil health.
-                  </p>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -364,10 +507,10 @@ export default function Home() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p>
+                  <div>
                     Record and analyze the effectiveness of biological products over time, allowing our AI to provide
                     increasingly accurate recommendations each season.
-                  </p>
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -378,13 +521,13 @@ export default function Home() {
         <section className="py-16 bg-green-100">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl font-bold mb-6">Ready to Improve Your Farm's Sustainability?</h2>
-            <p className="text-xl mb-8 max-w-3xl mx-auto">
+            <div className="text-xl mb-8 max-w-3xl mx-auto">
               Join thousands of farmers across India who are using biological products to protect their crops and
               improve soil health.
-            </p>
-            <Button size="lg" className="bg-green-800 hover:bg-green-900">
+            </div>
+            {/* <Button size="lg" className="bg-green-800 hover:bg-green-900">
               <a href="#signup-section">Create Your Farm Profile</a>
-            </Button>
+            </Button> */}
           </div>
         </section>
       </main>
@@ -394,7 +537,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <h3 className="text-lg font-semibold mb-4">FarmSmart</h3>
-              <p>AI-powered biological product recommendations for sustainable farming.</p>
+              <div>AI-powered biological product recommendations for sustainable farming.</div>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
@@ -438,12 +581,12 @@ export default function Home() {
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-4">Contact</h3>
-              <p>support@farmsmart.com</p>
-              <p>+91 123 456 7890</p>
+              <div>support@farmsmart.com</div>
+              <div>+91 123 456 7890</div>
             </div>
           </div>
           <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-            <p>&copy; {new Date().getFullYear()} FarmSmart. All rights reserved.</p>
+            <div>&copy; {new Date().getFullYear()} FarmSmart. All rights reserved.</div>
           </div>
         </div>
       </footer>
