@@ -1,0 +1,6 @@
+Crop,TMaxOptimum,TMaxLimit,TMinOptimum,TMinLimit,TMinNoFrost,TMinFrost
+Soybean,32,45,22,28,4,-3
+Corn,33,44,22,28,4,-3
+Cotton,32,38,20,25,4,-3
+Rice,32,38,22,28,NA,NA
+Wheat,25,32,15,20,NA,NA
