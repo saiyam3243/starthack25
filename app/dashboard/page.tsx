@@ -17,38 +17,25 @@ export default function Dashboard() {
   const [farmData, setFarmData] = useState(null)
   const [riskAssessment, setRiskAssessment] = useState(null)
   const [recommendations, setRecommendations] = useState(null)
+  const [selectedCrop, setSelectedCrop] = useState<'wheat' | 'rice' | 'cotton' | null>(null)
 
   // Handle data fetched from CE-Hub
-  const handleDataFetched = (data) => {
+  const handleDataFetched = (data: any) => {
     setFarmData(data)
   }
 
   // Handle risk assessment completion
-  const handleRiskAssessmentComplete = (assessment) => {
+  const handleRiskAssessmentComplete = (assessment: any) => {
     setRiskAssessment(assessment)
   }
 
   // Handle recommendations completion
-  const handleRecommendationsComplete = (recs) => {
+  const handleRecommendationsComplete = (recs: any) => {
     setRecommendations(recs)
   }
 
-  // Helper function to get emoji based on status
-  const getStatusEmoji = (status) => {
-    switch (status) {
-      case "good":
-        return "😀"
-      case "average":
-        return "😐"
-      case "poor":
-        return "😟"
-      default:
-        return "😐"
-    }
-  }
-
   // Helper function to get color based on status
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: any) => {
     switch (status) {
       case "good":
         return "bg-green-100 border-green-300"
@@ -62,7 +49,7 @@ export default function Dashboard() {
   }
 
   // Helper function to get text color based on status
-  const getTextColor = (status) => {
+  const getTextColor = (status: any) => {
     switch (status) {
       case "good":
         return "text-green-700"
@@ -76,7 +63,7 @@ export default function Dashboard() {
   }
 
   // Helper function to get risk level text and color
-  const getRiskDisplay = (level) => {
+  const getRiskDisplay = (level: any) => {
     switch (level) {
       case "low":
         return { text: "Low", color: "text-green-600" }
@@ -88,6 +75,35 @@ export default function Dashboard() {
         return { text: "Unknown", color: "text-gray-600" }
     }
   }
+
+  // Helper function to get stress level text
+  const getStressLevelText = (status: string) => {
+    switch (status) {
+      case "good":
+        return "No stressed detected for wheat."
+      case "average":
+        return "Daytime heat stress"
+      case "poor":
+        return "Frost stress"
+      default:
+        return "Unknown stress level."
+    }
+  }
+
+  // Helper function to get yield boostability status
+  const getYieldBoostability = (cropType: string) => {
+    switch (cropType) {
+      case "wheat":
+        return { text: "Medium", color: "text-yellow-600", bgColor: "bg-yellow-100", borderColor: "border-yellow-300", description: "Moderate potential for yield improvement with targeted interventions." }
+      case "rice":
+        return { text: "Bad", color: "text-red-600", bgColor: "bg-red-100", borderColor: "border-red-300", description: "Limited potential for yield improvement. Requires significant intervention." }
+      case "cotton":
+        return { text: "Good", color: "text-green-600", bgColor: "bg-green-100", borderColor: "border-green-300", description: "High potential for yield improvement with minimal intervention." }
+      default:
+        return { text: "Unknown", color: "text-gray-600", bgColor: "bg-gray-100", borderColor: "border-gray-300", description: "Unable to determine yield boostability." }
+    }
+  }
+
   const [cropStatus] = useState({
     wheat: {
       status: "good", // good, average, poor
@@ -133,6 +149,103 @@ export default function Dashboard() {
           </Button>
         </div>
       </div>
+
+      {/* Crop Status Cards - Spostato in alto */}
+      <h2 className="text-2xl font-bold mb-4">Your Crops</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Wheat Card */}
+        <Button 
+          variant="outline" 
+          className={`p-0 h-auto ${selectedCrop === "wheat" ? "border-4 border-blue-500" : "border-0"}`}
+          onClick={() => setSelectedCrop(selectedCrop === "wheat" ? null : "wheat")}
+        >
+          <Card className={`w-full ${getStatusColor(cropStatus.wheat.status)}`}>
+            <div className="flex flex-col items-center justify-center p-6">
+              <img src="/wheat.png" alt="Wheat" className="w-24 h-24 mb-4" />
+              <CardTitle className="text-center">Wheat</CardTitle>
+            </div>
+          </Card>
+        </Button>
+
+        {/* Rice Card */}
+        <Button 
+          variant="outline" 
+          className={`p-0 h-auto ${selectedCrop === "rice" ? "border-4 border-blue-500" : "border-0"}`}
+          onClick={() => setSelectedCrop(selectedCrop === "rice" ? null : "rice")}
+        >
+          <Card className={`w-full ${getStatusColor(cropStatus.rice.status)}`}>
+            <div className="flex flex-col items-center justify-center p-6">
+              <img src="/rice.png" alt="Rice" className="w-24 h-24 mb-4" />
+              <CardTitle className="text-center">Rice</CardTitle>
+            </div>
+          </Card>
+        </Button>
+
+        {/* Cotton Card */}
+        <Button 
+          variant="outline" 
+          className={`p-0 h-auto ${selectedCrop === "cotton" ? "border-4 border-blue-500" : "border-0"}`}
+          onClick={() => setSelectedCrop(selectedCrop === "cotton" ? null : "cotton")}
+        >
+          <Card className={`w-full ${getStatusColor(cropStatus.cotton.status)}`}>
+            <div className="flex flex-col items-center justify-center p-6">
+              <img src="/cotton.png" alt="Cotton" className="w-24 h-24 mb-4" />
+              <CardTitle className="text-center">Cotton</CardTitle>
+            </div>
+          </Card>
+        </Button>
+      </div>
+
+      {/* Stress Level Information */}
+      {selectedCrop && (
+        <>
+          <Card className={`mb-8 border-2 ${getStatusColor(cropStatus[selectedCrop].status)}`}>
+            <CardHeader>
+              <CardTitle>
+                <span>Stress Level for {selectedCrop.charAt(0).toUpperCase() + selectedCrop.slice(1)}</span>
+                <span className={`ml-2 ${getTextColor(cropStatus[selectedCrop].status)}`}>
+                  {cropStatus[selectedCrop].status === "good" && "Low"}
+                  {cropStatus[selectedCrop].status === "average" && "Medium"}
+                  {cropStatus[selectedCrop].status === "poor" && "High"}
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-4">
+                <img 
+                  src={
+                    cropStatus[selectedCrop].status === "good" 
+                      ? "/accept.png" 
+                      : cropStatus[selectedCrop].status === "average" 
+                        ? "/sun.png" 
+                        : "/snowflake.png"
+                  } 
+                  alt="Status Icon" 
+                  className="w-12 h-12" 
+                />
+                <div className="flex flex-col">
+                  <p>{getStressLevelText(cropStatus[selectedCrop].status)}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Yield Boostability Section */}
+          <Card className={`mb-8 border-2 ${getYieldBoostability(selectedCrop).bgColor} ${getYieldBoostability(selectedCrop).borderColor}`}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <span>Yield Boostability for {selectedCrop.charAt(0).toUpperCase() + selectedCrop.slice(1)}</span>
+                <span className={getYieldBoostability(selectedCrop).color}>
+                  {getYieldBoostability(selectedCrop).text}
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>{getYieldBoostability(selectedCrop).description}</p>
+            </CardContent>
+          </Card>
+        </>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <Card className="lg:col-span-1">
@@ -204,218 +317,6 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Crop Status Cards */}
-      <h2 className="text-2xl font-bold mb-4">Your Crops</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {/* Wheat Card */}
-        <Card className={`border-2 ${getStatusColor(cropStatus.wheat.status)}`}>
-          <div className="relative">
-
-            <div className="absolute top-2 right-2 text-4xl" aria-label="Crop status emoji">
-              {getStatusEmoji(cropStatus.wheat.status)}
-            </div>
-          </div>
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle>Wheat</CardTitle>
-            </div>
-            <CardDescription>Days to harvest: {cropStatus.wheat.daysToHarvest}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">Crop Health:</span>
-                <span className={`text-sm font-bold ${getTextColor(cropStatus.wheat.status)}`}>
-                  {cropStatus.wheat.healthPercentage}%
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div
-                  className={`h-2.5 rounded-full ${cropStatus.wheat.status === "good"
-                    ? "bg-green-500"
-                    : cropStatus.wheat.status === "average"
-                      ? "bg-yellow-500"
-                      : "bg-red-500"
-                    }`}
-                  style={{ width: `${cropStatus.wheat.healthPercentage}%` }}
-                ></div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <span className="text-gray-500">Water Needs:</span>
-                  <p className="font-medium">{cropStatus.wheat.waterNeeds}</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Pest Risk:</span>
-                  <p className={`font-medium ${getRiskDisplay(cropStatus.wheat.pestRisk).color}`}>
-                    {getRiskDisplay(cropStatus.wheat.pestRisk).text}
-                  </p>
-                </div>
-              </div>
-              <Alert className="bg-green-50 border-green-200">
-                <AlertTriangle className="h-4 w-4 text-green-600" />
-                <AlertTitle className="text-green-600">Action Needed</AlertTitle>
-                <AlertDescription className="text-green-700 text-sm">
-                  Your wheat crop is in a good condition. Use our product to increase the yield.
-                </AlertDescription>
-              </Alert>
-            </div>
-
-          </CardContent>
-          <CardFooter>
-            <Button className="w-full bg-green-600 hover:bg-green-700">
-              <Leaf className="mr-2 h-4 w-4" />
-              View Details
-            </Button>
-          </CardFooter>
-        </Card>
-
-        {/* Rice Card */}
-        <Card className={`border-2 ${getStatusColor(cropStatus.rice.status)}`}>
-          <div className="relative">
-            <div className="absolute top-2 right-2 text-4xl" aria-label="Crop status emoji">
-              {getStatusEmoji(cropStatus.rice.status)}
-            </div>
-          </div>
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle>Rice</CardTitle>
-              {/* <span className={`font-bold ${getTextColor(cropStatus.rice.status)}`}>
-                {cropStatus.rice.status.toUpperCase()}
-              </span> */}
-            </div>
-            <CardDescription>Days to harvest: {cropStatus.rice.daysToHarvest}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">Crop Health:</span>
-                <span className={`text-sm font-bold ${getTextColor(cropStatus.rice.status)}`}>
-                  {cropStatus.rice.healthPercentage}%
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div
-                  className={`h-2.5 rounded-full ${cropStatus.rice.status === "good"
-                    ? "bg-green-500"
-                    : cropStatus.rice.status === "average"
-                      ? "bg-yellow-500"
-                      : "bg-red-500"
-                    }`}
-                  style={{ width: `${cropStatus.rice.healthPercentage}%` }}
-                ></div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <span className="text-gray-500">Water Needs:</span>
-                  <p className="font-medium">{cropStatus.rice.waterNeeds}</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Pest Risk:</span>
-                  <p className={`font-medium ${getRiskDisplay(cropStatus.rice.pestRisk).color}`}>
-                    {getRiskDisplay(cropStatus.rice.pestRisk).text}
-                  </p>
-                </div>
-              </div>
-
-              {cropStatus.rice.actionNeeded && (
-                <Alert className="bg-yellow-50 border-yellow-200">
-                  <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                  <AlertTitle className="text-yellow-600">Action Needed</AlertTitle>
-                  <AlertDescription className="text-yellow-700 text-sm">
-                    Your rice crop needs attention. Consider applying recommended treatments.
-                  </AlertDescription>
-                </Alert>
-              )}
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button className="w-full bg-green-600 hover:bg-green-700">
-              <Leaf className="mr-2 h-4 w-4" />
-              View Details
-            </Button>
-          </CardFooter>
-        </Card>
-
-        {/* Cotton Card */}
-        <Card className={`border-2 ${getStatusColor(cropStatus.cotton.status)}`}>
-          <div className="relative">
-            <div className="absolute top-2 right-2 text-4xl" aria-label="Crop status emoji">
-              {getStatusEmoji(cropStatus.cotton.status)}
-            </div>
-          </div>
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle>Cotton</CardTitle>
-              {/* <span className={`font-bold ${getTextColor(cropStatus.cotton.status)}`}>
-                {cropStatus.cotton.status.toUpperCase()}
-              </span> */}
-            </div>
-            <CardDescription>Days to harvest: {cropStatus.cotton.daysToHarvest}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">Crop Health:</span>
-                <span className={`text-sm font-bold ${getTextColor(cropStatus.cotton.status)}`}>
-                  {cropStatus.cotton.healthPercentage}%
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div
-                  className={`h-2.5 rounded-full ${cropStatus.cotton.status === "good"
-                    ? "bg-green-500"
-                    : cropStatus.cotton.status === "average"
-                      ? "bg-yellow-500"
-                      : "bg-red-500"
-                    }`}
-                  style={{ width: `${cropStatus.cotton.healthPercentage}%` }}
-                ></div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <span className="text-gray-500">Water Needs:</span>
-                  <p className="font-medium">{cropStatus.cotton.waterNeeds}</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Pest Risk:</span>
-                  <p className={`font-medium ${getRiskDisplay(cropStatus.cotton.pestRisk).color}`}>
-                    {getRiskDisplay(cropStatus.cotton.pestRisk).text}
-                  </p>
-                </div>
-              </div>
-
-              {cropStatus.cotton.actionNeeded && (
-                <Alert className="bg-red-50 border-red-200">
-                  <AlertTriangle className="h-4 w-4 text-red-600" />
-                  <AlertTitle className="text-red-600">Urgent Action Required</AlertTitle>
-                  <AlertDescription className="text-red-700 text-sm">
-                    Your cotton crop is at high risk. Apply recommended treatments immediately.
-                  </AlertDescription>
-                </Alert>
-              )}
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button className="w-full bg-green-600 hover:bg-green-700">
-              <Leaf className="mr-2 h-4 w-4" />
-              View Details
-            </Button>
-          </CardFooter>
-        </Card>
-      </div>
-
-      <Tabs defaultValue="risks" className="mb-8">
-
-        <TabsContent value="risks">
-          <RiskAssessmentVisualization riskData={riskAssessment} />
-        </TabsContent>
-
-      </Tabs>
     </div>
   )
 }
