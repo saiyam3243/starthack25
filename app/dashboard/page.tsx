@@ -12,20 +12,11 @@ import WeatherChart from "@/components/weather-chart"
 import DataFetcher from "@/components/data-fetcher"
 import SoilHealthVisualization from "@/components/soil-health-visualization"
 import RiskAssessmentVisualization from "@/components/risk-assessment-visualization"
-import CropStatusVisualization from "@/components/crop-status-visualization"
-import { useSearchParams } from "next/navigation"
 
 export default function Dashboard() {
   const [farmData, setFarmData] = useState(null)
   const [riskAssessment, setRiskAssessment] = useState(null)
   const [recommendations, setRecommendations] = useState(null)
-
-  const searchParams = useSearchParams();
-
-  const lat = searchParams.get("lat");
-  const lon = searchParams.get("lon");
-  const farmSize = searchParams.get("farmSize");
-  const crop = searchParams.get("crop");
 
   // Handle data fetched from CE-Hub
   const handleDataFetched = (data) => {

@@ -46,7 +46,8 @@ export default function Home() {
     setCoordinates(coords);
 
     router.push(
-      `/dashboard?lat=${encodeURIComponent(coords.lat)}&lon=${encodeURIComponent(coords.lon)}&farmSize=${encodeURIComponent(farmSize)}&crop=${encodeURIComponent(crop)}`
+      // `/dashboard?lat=${encodeURIComponent(coords.lat)}&lon=${encodeURIComponent(coords.lon)}&farmSize=${encodeURIComponent(farmSize)}&crop=${encodeURIComponent(crop)}`
+    "/dashboard"
     );
   };
 
