@@ -80,11 +80,11 @@ export default function Dashboard() {
   const getStressLevelText = (status: string) => {
     switch (status) {
       case "good":
-        return "No stressed detected for wheat."
+        return "No stress detected for wheat, no action needed."
       case "average":
-        return "Daytime heat stress"
+        return "Daytime heat stress detected for rice, applying the stress buster is reccomended."
       case "poor":
-        return "Frost stress"
+        return "Frost stress detected for cotton, applying the stress buster is highly reccomended."
       default:
         return "Unknown stress level."
     }
@@ -94,11 +94,11 @@ export default function Dashboard() {
   const getYieldBoostability = (cropType: string) => {
     switch (cropType) {
       case "wheat":
-        return { text: "Medium", color: "text-yellow-600", bgColor: "bg-yellow-100", borderColor: "border-yellow-300", description: "Moderate potential for yield improvement with targeted interventions." }
+        return { text: "Medium", color: "text-yellow-600", bgColor: "bg-yellow-100", borderColor: "border-yellow-300", description: "Moderate potential for yield improvement with the yield booster." }
       case "rice":
-        return { text: "Bad", color: "text-red-600", bgColor: "bg-red-100", borderColor: "border-red-300", description: "Limited potential for yield improvement. Requires significant intervention." }
+        return { text: "Bad", color: "text-red-600", bgColor: "bg-red-100", borderColor: "border-red-300", description: "Limited potential for yield improvement. No intervention required." }
       case "cotton":
-        return { text: "Good", color: "text-green-600", bgColor: "bg-green-100", borderColor: "border-green-300", description: "High potential for yield improvement with minimal intervention." }
+        return { text: "Good", color: "text-green-600", bgColor: "bg-green-100", borderColor: "border-green-300", description: "High potential for yield improvement. The yield booster intervention could highly recommended." }
       default:
         return { text: "Unknown", color: "text-gray-600", bgColor: "bg-gray-100", borderColor: "border-gray-300", description: "Unable to determine yield boostability." }
     }
