@@ -35,19 +35,19 @@ export default function Home() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
+
     console.log("state:", state);
     console.log("city:", name);
-  
+
     const coords = await getCoordinates(name, state);
     // const forecast = await fetchForecastDaily(coords.lat, coords.lon, "TempAir_DailyMin (C)");
     // console.log("forec:", forecast);
 
     setCoordinates(coords);
-  
-    // router.push(
-    //   `/dashboard?lat=${encodeURIComponent(coords.lat)}&lon=${encodeURIComponent(coords.lon)}&farmSize=${encodeURIComponent(farmSize)}&crop=${encodeURIComponent(crop)}`
-    // );
+
+    router.push(
+      `/dashboard?lat=${encodeURIComponent(coords.lat)}&lon=${encodeURIComponent(coords.lon)}&farmSize=${encodeURIComponent(farmSize)}&crop=${encodeURIComponent(crop)}`
+    );
   };
 
   return (
@@ -58,30 +58,6 @@ export default function Home() {
             <Leaf className="h-6 w-6" />
             <h1 className="text-2xl font-bold">FarmSmart</h1>
           </div>
-          <nav>
-            <ul className="flex space-x-6">
-              <li>
-                <Link href="/dashboard" className="hover:underline">
-                  Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link href="/recommendations" className="hover:underline">
-                  Recommendations
-                </Link>
-              </li>
-              <li>
-                <Link href="/tracking" className="hover:underline">
-                  Tracking
-                </Link>
-              </li>
-              <li>
-                <Link href="/profile" className="hover:underline">
-                  Profile
-                </Link>
-              </li>
-            </ul>
-          </nav>
         </div>
       </header>
 
@@ -126,7 +102,7 @@ export default function Home() {
                 </div>
             </Card> */}
 
-            <Card className="border-2 border-green-100 shadow-lg w-1/2 mx-auto">
+            <Card className="border-2 border-green-100 shadow-lg w-1/2 mx-auto text-left">
               <CardHeader>
                 <CardTitle>Create Your Farm Profile</CardTitle>
                 <CardDescription>Fill in the details below to get started</CardDescription>
@@ -165,9 +141,9 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="farmSize">Farm Size</Label>
+                      <Label htmlFor="farmSize">Farm Size (Hectares)</Label>
                       <Input
                         id="farmSize"
                         placeholder="Enter size"
@@ -175,23 +151,24 @@ export default function Home() {
                         onChange={(e) => setFarmSize(e.target.value)}
                       />
                     </div>
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label>Primary Crop</Label>
-                    <Select onValueChange={(value) => setCrop(value)}>
-                      <SelectTrigger id="crop">
-                        <SelectValue placeholder="Select crop" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="cotton">Cotton</SelectItem>
-                        <SelectItem value="chickpea">Chickpea</SelectItem>
-                        <SelectItem value="wheat">Wheat</SelectItem>
-                        <SelectItem value="rice">Rice</SelectItem>
-                        <SelectItem value="maize">Maize</SelectItem>
-                        <SelectItem value="vegetables">Vegetables</SelectItem>
-                      </SelectContent>
-                    </Select>
+
+                    <div className="space-y-2">
+                      <Label>Primary Crop</Label>
+                      <Select onValueChange={(value) => setCrop(value)}>
+                        <SelectTrigger id="crop">
+                          <SelectValue placeholder="Select crop" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="cotton">Cotton</SelectItem>
+                          <SelectItem value="chickpea">Chickpea</SelectItem>
+                          <SelectItem value="wheat">Wheat</SelectItem>
+                          <SelectItem value="rice">Rice</SelectItem>
+                          <SelectItem value="maize">Maize</SelectItem>
+                          <SelectItem value="vegetables">Vegetables</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
 
                   <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
@@ -200,264 +177,6 @@ export default function Home() {
                 </form>
               </CardContent>
             </Card>
-
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" className="bg-white text-green-800 hover:bg-gray-100" onClick={handleGetStarted}>
-                Get Started <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </section>
-
-        {/* Farmer Signup Section */}
-        <section className="py-16 bg-white" id="signup-section">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-3xl font-bold mb-6">Create Your Farm Profile</h2>
-                <div className="text-lg mb-6">
-                  Tell us about your farm to get personalized recommendations for biological products that will help you
-                  improve crop health and yield while reducing chemical inputs.
-                </div>
-                <div className="space-y-6">
-                  <div className="flex items-start gap-3">
-                    <div className="bg-green-100 p-2 rounded-full text-green-600 mt-1">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-lg">Personalized Recommendations</h3>
-                      <div>
-                        Get product recommendations tailored to your specific crops, soil type, and local climate
-                        conditions.
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="bg-green-100 p-2 rounded-full text-green-600 mt-1">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-lg">Risk Assessment</h3>
-                      <div>Identify potential pest, disease, and climate risks before they affect your crops.</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="bg-green-100 p-2 rounded-full text-green-600 mt-1">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-lg">Track Your Results</h3>
-                      <div>
-                        Monitor the effectiveness of biological products and improve your farming practices over time.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* <div>
-                <Card className="border-2 border-green-100 shadow-lg">
-                  <CardHeader>
-                    <CardTitle>Create Your Farm Profile</CardTitle>
-                    <CardDescription>Fill in the details below to get started</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="farmerName">Your Name</Label>
-                          <Input id="farmerName" placeholder="Enter your full name" />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="farmName">Farm Name</Label>
-                          <Input id="farmName" placeholder="Enter your farm name" />
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="phoneNumber">Phone Number</Label>
-                        <Input id="phoneNumber" placeholder="Enter your phone number" />
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="district">District</Label>
-                          <Input id="district" placeholder="Enter your district" />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="state">State</Label>
-                          <Select>
-                            <SelectTrigger id="state">
-                              <SelectValue placeholder="Select state" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="maharashtra">Maharashtra</SelectItem>
-                              <SelectItem value="gujarat">Gujarat</SelectItem>
-                              <SelectItem value="punjab">Punjab</SelectItem>
-                              <SelectItem value="haryana">Haryana</SelectItem>
-                              <SelectItem value="karnataka">Karnataka</SelectItem>
-                              <SelectItem value="telangana">Telangana</SelectItem>
-                              <SelectItem value="andhra_pradesh">Andhra Pradesh</SelectItem>
-                              <SelectItem value="tamil_nadu">Tamil Nadu</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-3 gap-4">
-                        <div className="col-span-2 space-y-2">
-                          <Label htmlFor="farmSize">Farm Size</Label>
-                          <Input id="farmSize" placeholder="Enter size" />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="farmSizeUnit">Unit</Label>
-                          <Select>
-                            <SelectTrigger id="farmSizeUnit">
-                              <SelectValue placeholder="Unit" defaultValue="hectares" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="hectares">Hectares</SelectItem>
-                              <SelectItem value="acres">Acres</SelectItem>
-                              <SelectItem value="bigha">Bigha</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="soilType">Soil Type</Label>
-                        <Select>
-                          <SelectTrigger id="soilType">
-                            <SelectValue placeholder="Select soil type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="black_cotton">Black Cotton Soil</SelectItem>
-                            <SelectItem value="red_soil">Red Soil</SelectItem>
-                            <SelectItem value="alluvial">Alluvial Soil</SelectItem>
-                            <SelectItem value="laterite">Laterite Soil</SelectItem>
-                            <SelectItem value="sandy">Sandy Soil</SelectItem>
-                            <SelectItem value="clay">Clay Soil</SelectItem>
-                            <SelectItem value="loamy">Loamy Soil</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label>Primary Crops</Label>
-                        <div className="grid grid-cols-2 gap-2">
-                          <div className="flex items-center space-x-2">
-                            <Checkbox id="cotton" />
-                            <Label htmlFor="cotton" className="font-normal">
-                              Cotton
-                            </Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox id="chickpea" />
-                            <Label htmlFor="chickpea" className="font-normal">
-                              Chickpea
-                            </Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox id="wheat" />
-                            <Label htmlFor="wheat" className="font-normal">
-                              Wheat
-                            </Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox id="rice" />
-                            <Label htmlFor="rice" className="font-normal">
-                              Rice
-                            </Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox id="maize" />
-                            <Label htmlFor="maize" className="font-normal">
-                              Maize
-                            </Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox id="vegetables" />
-                            <Label htmlFor="vegetables" className="font-normal">
-                              Vegetables
-                            </Label>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="farmingMethod">Farming Method</Label>
-                        <Select>
-                          <SelectTrigger id="farmingMethod">
-                            <SelectValue placeholder="Select farming method" defaultValue="conventional" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="conventional">Conventional</SelectItem>
-                            <SelectItem value="organic">Organic</SelectItem>
-                            <SelectItem value="natural">Natural Farming</SelectItem>
-                            <SelectItem value="integrated">Integrated Farming</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="additionalInfo">Additional Information</Label>
-                        <Textarea
-                          id="additionalInfo"
-                          placeholder="Any specific challenges or goals for your farm?"
-                          className="resize-none"
-                        />
-                      </div>
-
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="terms" />
-                        <Label htmlFor="terms" className="font-normal">
-                          I agree to the terms of service and privacy policy
-                        </Label>
-                      </div>
-
-                      <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
-                        Create Farm Profile
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
-              </div> */}
-            </div>
           </div>
         </section>
 

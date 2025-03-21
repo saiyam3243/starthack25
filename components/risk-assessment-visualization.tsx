@@ -298,18 +298,18 @@ export default function RiskAssessmentVisualization({ riskData }: RiskAssessment
         </div>
 
         <Tabs defaultValue="cotton">
-          <TabsList className="mb-4">
+          {/* <TabsList className="mb-4">
             {Object.keys(data.cropRisks).map((crop) => (
               <TabsTrigger key={crop} value={crop.toLowerCase()}>
                 {crop}
               </TabsTrigger>
             ))}
-          </TabsList>
+          </TabsList> */}
 
           {Object.entries(data.cropRisks).map(([crop, risks]) => (
             <TabsContent key={crop} value={crop.toLowerCase()}>
               <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <h3 className="font-semibold mb-4">Current Risk Factors</h3>
 
@@ -491,7 +491,7 @@ export default function RiskAssessmentVisualization({ riskData }: RiskAssessment
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 <div>
                   <h3 className="font-semibold mb-4">Recommended Actions</h3>

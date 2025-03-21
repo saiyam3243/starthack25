@@ -94,42 +94,13 @@ export default function Recommendations() {
         </div>
       </div>
 
-      {!recommendations && (
-        <div className="mb-8">
-          <Alert className="mb-4">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>No personalized recommendations yet</AlertTitle>
-            <AlertDescription>
-              Fetch your farm data to get personalized recommendations based on your specific conditions.
-            </AlertDescription>
-          </Alert>
-
-          <DataFetcher
-            latitude={18.5204} // Default coordinates for Pune, India
-            longitude={73.8567}
-            onDataFetched={handleDataFetched}
-            onRiskAssessmentComplete={handleRiskAssessmentComplete}
-            onRecommendationsComplete={handleRecommendationsComplete}
-          />
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-1">
-          <RecommendationFilter />
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
 
         <div className="lg:col-span-3">
           <Tabs defaultValue="all" className="mb-8" onValueChange={setActiveTab}>
-            <TabsList className="mb-4">
-              <TabsTrigger value="all">All Recommendations</TabsTrigger>
-              <TabsTrigger value="pest">Pest Control</TabsTrigger>
-              <TabsTrigger value="disease">Disease Control</TabsTrigger>
-              <TabsTrigger value="soil">Soil Health</TabsTrigger>
-            </TabsList>
 
             <TabsContent value="all">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {filteredProducts().map((rec, index) => (
                   <EnhancedProductCard
                     key={rec.product ? rec.product.id : index}
@@ -143,7 +114,7 @@ export default function Recommendations() {
             </TabsContent>
 
             <TabsContent value="pest">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {filteredProducts().map((rec, index) => (
                   <EnhancedProductCard
                     key={rec.product ? rec.product.id : index}
