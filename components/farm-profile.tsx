@@ -21,22 +21,7 @@ export default function FarmProfile() {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <p className="text-sm text-gray-500">Farm Size</p>
-          <p className="font-medium">12 hectares</p>
-        </div>
-        <div>
-          <p className="text-sm text-gray-500">Soil Type</p>
-          <p className="font-medium">Black Cotton Soil</p>
-        </div>
-        <div>
-          <p className="text-sm text-gray-500">Primary Crops</p>
-          <div className="flex flex-wrap gap-1 mt-1">
-            <Badge variant="outline">Cotton</Badge>
-            <Badge variant="outline">Chickpea</Badge>
-          </div>
-        </div>
-        <div>
-          <p className="text-sm text-gray-500">Farming Method</p>
-          <p className="font-medium">Organic</p>
+          <p className="font-medium">10 hectares</p>
         </div>
       </div>
 

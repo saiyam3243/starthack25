@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { fetchForecastDaily, getCoordinates } from '@/lib/api-services'
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { Suspense, useState } from "react"
 
 export default function Home() {
 
@@ -51,7 +51,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <Suspense className="flex flex-col min-h-screen">
       <header className="bg-green-800 text-white py-4">
         <div className="container mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
@@ -151,24 +151,6 @@ export default function Home() {
                         onChange={(e) => setFarmSize(e.target.value)}
                       />
                     </div>
-
-
-                    <div className="space-y-2">
-                      <Label>Primary Crop</Label>
-                      <Select onValueChange={(value) => setCrop(value)}>
-                        <SelectTrigger id="crop">
-                          <SelectValue placeholder="Select crop" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="cotton">Cotton</SelectItem>
-                          <SelectItem value="chickpea">Chickpea</SelectItem>
-                          <SelectItem value="wheat">Wheat</SelectItem>
-                          <SelectItem value="rice">Rice</SelectItem>
-                          <SelectItem value="maize">Maize</SelectItem>
-                          <SelectItem value="vegetables">Vegetables</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
                   </div>
 
                   <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
@@ -244,9 +226,6 @@ export default function Home() {
               Join thousands of farmers across India who are using biological products to protect their crops and
               improve soil health.
             </div>
-            {/* <Button size="lg" className="bg-green-800 hover:bg-green-900">
-              <a href="#signup-section">Create Your Farm Profile</a>
-            </Button> */}
           </div>
         </section>
       </main>
@@ -309,7 +288,7 @@ export default function Home() {
           </div>
         </div>
       </footer>
-    </div>
+    </Suspense>
   )
 }
 

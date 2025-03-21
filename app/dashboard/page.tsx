@@ -419,23 +419,11 @@ export default function Dashboard() {
       </div>
 
       <Tabs defaultValue="risks" className="mb-8">
-        <TabsList className="mb-4">
-          <TabsTrigger value="risks">Risk Assessment</TabsTrigger>
-          <TabsTrigger value="soil">Soil Health</TabsTrigger>
-          <TabsTrigger value="crops">Crop Status</TabsTrigger>
-        </TabsList>
 
         <TabsContent value="risks">
           <RiskAssessmentVisualization riskData={riskAssessment} />
         </TabsContent>
 
-        <TabsContent value="soil">
-          <SoilHealthVisualization soilData={farmData?.soilData} />
-        </TabsContent>
-
-        <TabsContent value="crops">
-          <CropStatusVisualization cropData={farmData?.crops} />
-        </TabsContent>
       </Tabs>
     </div>
   )
